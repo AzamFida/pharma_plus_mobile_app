@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901858029123",
+    "project_id": "pharma-plus-3548b",
+    "storage_bucket": "pharma-plus-3548b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901858029123:android:32b22caa6274304d2faef6",
+        "android_client_info": {
+          "package_name": "com.example.pharmaplus_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHqK8eBpCNkExEInsk_LI7iIGDuXNTqhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
