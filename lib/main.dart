@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/screens/medicine_list_screen.dart';
+import 'package:pharmaplus_flutter/presentation/screens/splash_screen.dart';
+import 'package:pharmaplus_flutter/providers/medicine_provider';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => MedicineProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MedicineListScreen(),
+      home: SplashScreen(),
     );
   }
 }

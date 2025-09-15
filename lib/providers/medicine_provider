@@ -1,0 +1,35 @@
+import 'package:flutter/foundation.dart';
+import 'package:pharmaplus_flutter/data/models/medicine_model.dart';
+
+class MedicineProvider extends ChangeNotifier {
+  final List<MedicineModel> _medicines = [];
+
+  List<MedicineModel> get medicines => List.unmodifiable(_medicines);
+
+  // Add new medicine locally
+  void addMedicine(MedicineModel medicine) {
+    _medicines.add(medicine);
+    notifyListeners();
+  }
+
+  // Edit medicine by id
+  void updateMedicine(MedicineModel updatedMedicine) {
+    final index = _medicines.indexWhere((med) => med.id == updatedMedicine.id);
+    if (index != -1) {
+      _medicines[index] = updatedMedicine;
+      notifyListeners();
+    }
+  }
+
+  // Optionally remove medicine
+  void removeMedicine(int id) {
+    _medicines.removeWhere((med) => med.id == id);
+    notifyListeners();
+  }
+
+  // Clear all
+  void clear() {
+    _medicines.clear();
+    notifyListeners();
+  }
+}
