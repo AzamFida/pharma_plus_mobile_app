@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_input_field.dart';
 import 'package:pharmaplus_flutter/providers/signup_provider.dart';
-import 'package:pharmaplus_flutter/providers/email_auth_provider.dart';
+import 'package:pharmaplus_flutter/providers/email_authenticafion_provider.dart';
 import 'package:provider/provider.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -17,7 +17,7 @@ class SignupScreen extends StatelessWidget {
 
     // Access providers directly (provided by MultiProvider in main.dart)
     final signupProvider = Provider.of<SignupProvider>(context);
-    final authProvider = Provider.of<EmailAuthProvider>(context);
+    final authProvider = Provider.of<EmailAuthenticationProvider>(context);
 
     return Scaffold(
       body: Container(

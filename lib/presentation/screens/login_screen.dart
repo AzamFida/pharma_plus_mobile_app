@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_input_field.dart';
 import 'package:pharmaplus_flutter/providers/login_providers.dart';
 import 'package:pharmaplus_flutter/providers/google_signin_provider.dart';
-import 'package:pharmaplus_flutter/providers/email_auth_provider.dart';
+import 'package:pharmaplus_flutter/providers/email_authenticafion_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Access existing providers from main.dart
     final loginProvider = Provider.of<LoginProvider>(context);
-    final authProvider = Provider.of<EmailAuthProvider>(context);
+    final authProvider = Provider.of<EmailAuthenticationProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -177,6 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Google sign-in successful"),
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  MedicineListScreen(),
                         ),
                       );
                     }

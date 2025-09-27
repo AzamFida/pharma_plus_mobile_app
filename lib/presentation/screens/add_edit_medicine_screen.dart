@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_text_field.dart';
-import 'package:pharmaplus_flutter/providers/medicine_provider';
+
+import 'package:pharmaplus_flutter/providers/medicine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/data/models/medicine_model.dart';
 
@@ -72,11 +73,14 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
     super.dispose();
   }
 
+  // In _saveMedicine method, remove the ID generation:
+  // In _saveMedicine method, remove the ID generation:
   void _saveMedicine() {
     if (_formKey.currentState!.validate()) {
       try {
+        // Create medicine without ID - it will be auto-generated
         final medicine = MedicineModel(
-          id: widget.medicine?.id ?? DateTime.now().millisecondsSinceEpoch,
+          id: 0, // Temporary value, will be replaced by auto-increment
           name: _nameController.text,
           costPrice: parseNumber(_costPriceController.text).toDouble(),
           wholeSalePrice: parseNumber(
@@ -88,21 +92,21 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
         final medicineProvider = context.read<MedicineProvider>();
 
         if (widget.medicine == null) {
+          // Add new medicine (auto-increment will handle ID)
           medicineProvider.addMedicine(medicine);
         } else {
-          medicineProvider.updateMedicine(medicine);
+          // Editing existing medicine - keep the original ID
+          medicineProvider.updateMedicine(
+            medicine.copyWith(id: widget.medicine!.id),
+          );
         }
 
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              'Please Enter valid numbers.',
-              style: TextStyle(color: Colors.white),
-            ),
+            content: Text('Please Enter valid numbers.'),
             backgroundColor: Colors.red,
-            duration: Duration(milliseconds: 1000),
           ),
         );
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pharmaplus_flutter/presentation/screens/login_screen.dart';
 import 'package:pharmaplus_flutter/presentation/screens/medicine_list_screen.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
 
@@ -18,7 +19,7 @@ class SplashScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MedicineListScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
               backgroundColor: Colors.white,

@@ -12,7 +12,20 @@
           "package_name": "com.example.pharmaplus_flutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "901858029123-b218ggggi17ovlqtsm2d73qo82bhmqji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pharmaplus_flutter",
+            "certificate_hash": "06f9ecec26ffa075aea4ef16464195a80bfaecf2"
+          }
+        },
+        {
+          "client_id": "901858029123-jd96dfc5vqoql7jd7q2n2bqdk256i01g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCHqK8eBpCNkExEInsk_LI7iIGDuXNTqhM"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901858029123-jd96dfc5vqoql7jd7q2n2bqdk256i01g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "901858029123-anogh49rpmbk1i1fjoq5s8l812k9ocsg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pharmaplusFlutter"
+              }
+            }
+          ]
         }
       }
     }

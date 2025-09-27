@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pharmaplus_flutter/providers/medicine_provider';
+
+import 'package:pharmaplus_flutter/providers/medicine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/presentation/screens/add_edit_medicine_screen.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/medicine_list_tile.dart';
@@ -20,12 +21,16 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
   @override
   void initState() {
     super.initState();
+    _loadMedicines();
+  }
 
-    // Simulate 2 seconds loading
-    Timer(const Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
+  Future<void> _loadMedicines() async {
+    final provider = Provider.of<MedicineProvider>(context, listen: false);
+    await provider.fetchMedicines();
+
+    await Future.delayed(const Duration(seconds: 1));
+    setState(() {
+      _isLoading = false;
     });
   }
 
