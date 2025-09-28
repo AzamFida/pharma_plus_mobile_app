@@ -36,7 +36,8 @@ class MedicineListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      borderOnForeground: true,
+      color: const Color.fromARGB(208, 190, 149, 247),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 4,
@@ -50,15 +51,15 @@ class MedicineListTile extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: const Color.fromARGB(122, 211, 196, 237),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
                 medicine.name,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.w600,
-                  color: Colors.blueAccent,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -103,8 +104,9 @@ class MedicineListTile extends StatelessWidget {
                   label: const Text('Edit'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: const Color.fromARGB(135, 163, 81, 235),
                     fixedSize: Size(110, 40),
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -147,12 +149,12 @@ class MedicineListTile extends StatelessWidget {
   TextStyle get _labelStyle => const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: Colors.black87,
+    color: Colors.white,
   );
 
   TextStyle get _valueStyle => const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: Colors.black,
+    color: Colors.white,
   );
 }

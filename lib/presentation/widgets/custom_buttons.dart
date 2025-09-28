@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.text = 'Save',
 
-    this.backgroundColor = Colors.lightBlue,
+    this.backgroundColor = const Color.fromARGB(150, 153, 108, 249),
     this.textColor = Colors.white,
   });
 
@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
         onTap: onPressed,
         child: Container(
           width: double.infinity,
-          height: 45,
+          height: 50,
           decoration: BoxDecoration(
             color: backgroundColor,
             border: border,
@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: textColor,
               ),

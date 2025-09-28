@@ -23,12 +23,16 @@ class CustomTextFormField extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(fontSize: 14),
+          floatingLabelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(fontSize: 16, color: Colors.white),
           filled: true,
+
           fillColor: Colors.white24, // Light blackish background
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+            borderSide: BorderSide(
+              color: const Color.fromARGB(255, 139, 138, 138),
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(

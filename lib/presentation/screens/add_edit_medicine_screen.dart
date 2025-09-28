@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_text_field.dart';
+import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
 
 import 'package:pharmaplus_flutter/providers/medicine_provider.dart';
 import 'package:provider/provider.dart';
@@ -94,10 +95,28 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
         if (widget.medicine == null) {
           // Add new medicine (auto-increment will handle ID)
           medicineProvider.addMedicine(medicine);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Data is Added",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Color.fromARGB(255, 191, 122, 252),
+            ),
+          );
         } else {
           // Editing existing medicine - keep the original ID
           medicineProvider.updateMedicine(
             medicine.copyWith(id: widget.medicine!.id),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Data is updated Successfully!",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Color.fromARGB(255, 191, 122, 252),
+            ),
           );
         }
 
@@ -117,43 +136,53 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
   Widget build(BuildContext context) {
     final isEditing = widget.medicine != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Medicine' : 'Add Medicine'),
-        animateColor: true,
-        backgroundColor: Colors.lightBlueAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 60),
-                CustomTextFormField(controller: _nameController, label: "Name"),
-                CustomTextFormField(
-                  controller: _costPriceController,
-                  label: "Cost Price",
-                  keyboardType: TextInputType.number,
-                ),
-                CustomTextFormField(
-                  controller: _wholeSalePriceController,
-                  label: "Wholesale Price",
-                  keyboardType: TextInputType.number,
-                ),
-                CustomTextFormField(
-                  controller: _salePriceController,
-                  label: "Sale Price",
-                  keyboardType: TextInputType.number,
-                ),
+    return GradientBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text(
+            isEditing ? 'Edit Medicine' : 'Add Medicine',
+            style: TextStyle(color: Colors.white),
+          ),
+          animateColor: true,
+          backgroundColor: Colors.transparent,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 60),
+                  CustomTextFormField(
+                    controller: _nameController,
+                    label: "Name",
+                  ),
+                  CustomTextFormField(
+                    controller: _costPriceController,
+                    label: "Cost Price",
+                    keyboardType: TextInputType.number,
+                  ),
+                  CustomTextFormField(
+                    controller: _wholeSalePriceController,
+                    label: "Wholesale Price",
+                    keyboardType: TextInputType.number,
+                  ),
+                  CustomTextFormField(
+                    controller: _salePriceController,
+                    label: "Sale Price",
+                    keyboardType: TextInputType.number,
+                  ),
 
-                const SizedBox(height: 20),
-                CustomButton(
-                  onPressed: _saveMedicine,
-                  text: isEditing ? 'Update' : 'Save',
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  CustomButton(
+                    onPressed: _saveMedicine,
+                    text: isEditing ? 'Update' : 'Save',
+                  ),
+                ],
+              ),
             ),
           ),
         ),
