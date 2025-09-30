@@ -58,6 +58,7 @@ class EmailAuthenticationProvider with ChangeNotifier {
   }
 
   // Sign in with email and password
+  // Sign in with email and password
   Future<User?> signInWithEmail({
     required String email,
     required String password,
