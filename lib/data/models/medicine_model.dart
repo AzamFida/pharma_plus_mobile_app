@@ -6,6 +6,7 @@ class MedicineModel {
   final double costPrice;
   final double wholeSalePrice;
   final double salePrice;
+
   MedicineModel({
     required this.id,
     required this.name,
@@ -13,6 +14,29 @@ class MedicineModel {
     required this.wholeSalePrice,
     required this.salePrice,
   });
+
+  /// 🔑 Computed Secret Code (not stored in DB)
+  String get secretCode {
+    final Map<String, String> codeMap = {
+      "1": "B",
+      "2": "U",
+      "3": "Y",
+      "4": "F",
+      "5": "O",
+      "6": "R",
+      "7": "S",
+      "8": "A",
+      "9": "L",
+      "0": "E",
+    };
+
+    return costPrice
+        .toInt() // make sure it's an int first
+        .toString()
+        .split('')
+        .map((digit) => codeMap[digit] ?? "")
+        .join();
+  }
 
   MedicineModel copyWith({
     int? id,
@@ -59,7 +83,7 @@ class MedicineModel {
 
   @override
   String toString() {
-    return 'MedicineModel(id: $id, name: $name, costPrice: $costPrice, wholeSalePrice: $wholeSalePrice, salePrice: $salePrice)';
+    return 'MedicineModel(id: $id, name: $name, costPrice: $costPrice, wholeSalePrice: $wholeSalePrice, salePrice: $salePrice, secretCode: $secretCode)';
   }
 
   @override

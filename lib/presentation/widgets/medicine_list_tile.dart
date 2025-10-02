@@ -66,6 +66,16 @@ class MedicineListTile extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
+            // 🔑 Secret Code
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Secret Code:', style: _labelStyle),
+                Text(medicine.secretCode, style: _valueStyle), // ✅ NEW
+              ],
+            ),
+            const SizedBox(height: 4),
+
             // Prices
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,8 +115,7 @@ class MedicineListTile extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: const Color.fromARGB(135, 163, 81, 235),
-                    fixedSize: Size(110, 40),
-
+                    fixedSize: const Size(110, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -125,7 +134,7 @@ class MedicineListTile extends StatelessWidget {
                   icon: const Icon(Icons.delete, size: 18),
                   label: const Text('Delete'),
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(110, 40),
+                    fixedSize: const Size(110, 40),
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.redAccent,
                     shape: RoundedRectangleBorder(

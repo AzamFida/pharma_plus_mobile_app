@@ -110,6 +110,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
 
                               if (user != null) {
+                                Provider.of<LoginProvider>(
+                                  context,
+                                  listen: false,
+                                ).clearFields();
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

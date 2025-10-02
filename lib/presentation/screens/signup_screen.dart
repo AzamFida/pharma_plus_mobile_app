@@ -120,6 +120,10 @@ class SignupScreen extends StatelessWidget {
                                 );
 
                                 if (user != null) {
+                                  Provider.of<SignupProvider>(
+                                    context,
+                                    listen: false,
+                                  ).clearFields();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
