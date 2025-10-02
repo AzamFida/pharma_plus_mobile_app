@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     final authState = Provider.of<AuthStateProvider>(context);
@@ -64,3 +67,54 @@ class AuthWrapper extends StatelessWidget {
     return authState.isLoggedIn ? MedicineListScreen() : SplashScreen();
   }
 }
+//**
+//
+//LogOUt Functionality
+// */
+
+
+
+// AppBar(
+//   title: Text('Medicine List'),
+//   actions: [
+//     PopupMenuButton(
+//       itemBuilder: (context) => [
+//         PopupMenuItem(
+//           child: Text('Logout'),
+//           onTap: () {
+//             // Delay to let menu close
+//             Future.delayed(Duration.zero, () {
+//               _showLogoutDialog(context);
+//             });
+//           },
+//         ),
+//       ],
+//     ),
+//   ],
+// );
+
+// void _showLogoutDialog(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text('Logout'),
+//         content: Text('Are you sure you want to logout?'),
+//         actions: [
+//           TextButton(
+//             child: Text('Cancel'),
+//             onPressed: () => Navigator.of(context).pop(),
+//           ),
+//           TextButton(
+//             child: Text('Logout'),
+//             onPressed: () async {
+//               Navigator.of(context).pop();
+//               await Provider.of<AuthStateProvider>(context, listen: false)
+//                   .logout();
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
