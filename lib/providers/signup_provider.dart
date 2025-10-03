@@ -10,6 +10,14 @@ class SignupProvider with ChangeNotifier {
   String get passwordText => passwordController.text;
   String get repeatPasswordText => repeatPasswordController.text;
 
+  /// 🔹 Clear all fields
+  void clearFields() {
+    emailController.clear();
+    passwordController.clear();
+    repeatPasswordController.clear();
+    notifyListeners(); // optional (if UI depends on changes)
+  }
+
   @override
   void dispose() {
     emailController.dispose();

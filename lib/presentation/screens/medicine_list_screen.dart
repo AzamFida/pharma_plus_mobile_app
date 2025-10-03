@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/animation_widget.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
+import 'package:pharmaplus_flutter/presentation/widgets/logout_dialog.dart';
 import 'package:pharmaplus_flutter/providers/medicine_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/presentation/screens/add_edit_medicine_screen.dart';
@@ -77,13 +78,22 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Medicines List',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.transparent,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              onPressed: () {
+                showLogoutDialog(context);
+              },
+            ),
+          ],
         ),
+
         body: _isLoading
             ? _buildShimmerList()
             : CustomScrollView(
