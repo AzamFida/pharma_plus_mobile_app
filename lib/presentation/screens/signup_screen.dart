@@ -3,6 +3,7 @@ import 'package:pharmaplus_flutter/presentation/screens/login_screen.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/animation_widget.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_input_field.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
+import 'package:pharmaplus_flutter/providers/login_providers.dart';
 import 'package:pharmaplus_flutter/providers/signup_provider.dart';
 import 'package:pharmaplus_flutter/providers/email_authenticafion_provider.dart';
 import 'package:provider/provider.dart';
@@ -178,6 +179,10 @@ class SignupScreen extends StatelessWidget {
                               context,
                               createFadeScaleRoute(const LoginScreen()),
                             );
+                            Provider.of<LoginProvider>(
+                              context,
+                              listen: false,
+                            ).clearFields();
                           },
                           child: Text(
                             "Login Now",

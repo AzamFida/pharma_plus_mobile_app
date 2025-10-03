@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? _errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: width * 0.07,
                     ),
                   ),
+                  SizedBox(height: height * 0.06),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   SizedBox(height: height * 0.06),
 
                   // ✉️ Email Field
@@ -121,11 +135,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 );
                               } else if (authProvider.errorMessage != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(authProvider.errorMessage!),
-                                  ),
-                                );
+                                setState(() {
+                                  _errorMessage = "Incorrect email or password";
+                                });
+                                Provider.of<LoginProvider>(
+                                  context,
+                                  listen: false,
+                                ).clearFields();
                               }
                             }
                           },
@@ -181,6 +197,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         context,
                       );
                       if (user != null) {
+                        Provider.of<LoginProvider>(
+                          context,
+                          listen: false,
+                        ).clearFields();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Google sign-in successful"),
@@ -244,6 +264,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             context,
                             createFadeScaleRoute(SignupScreen()),
                           );
+                          Provider.of<LoginProvider>(
+                            context,
+                            listen: false,
+                          ).clearFields();
                         },
                         child: Text(
                           "Sign Up Now",
