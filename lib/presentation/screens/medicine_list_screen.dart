@@ -185,18 +185,25 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
   Widget _deleteDialog(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     return AlertDialog(
-      backgroundColor: const Color.fromARGB(243, 195, 169, 251),
+      backgroundColor: const Color.fromARGB(243, 115, 115, 115),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: const [
-          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Color.fromARGB(255, 209, 114, 107),
+            size: 28,
+          ),
           SizedBox(width: 8),
-          Text('Confirm Deletion'),
+          Text(
+            'Confirm Deletion',
+            style: TextStyle(height: 1.4, color: Colors.white),
+          ),
         ],
       ),
       content: const Text(
         'This action will permanently remove this medicine.\nAre you sure you want to proceed?',
-        style: TextStyle(fontSize: 16, height: 1.4),
+        style: TextStyle(fontSize: 16, height: 1.4, color: Colors.white),
       ),
       actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       actions: [
@@ -205,7 +212,7 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
           icon: const Icon(Icons.cancel, size: 18),
           label: const Text('Cancel'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 223, 167, 248),
+            backgroundColor: const Color.fromARGB(255, 159, 158, 158),
             foregroundColor: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -263,8 +270,8 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: const Color.fromARGB(238, 181, 134, 248),
-          highlightColor: const Color.fromARGB(121, 195, 164, 248),
+          baseColor: const Color.fromARGB(237, 78, 78, 79),
+          highlightColor: const Color.fromARGB(121, 175, 175, 176),
           child: Card(
             borderOnForeground: true,
             color: const Color.fromARGB(122, 211, 196, 237),

@@ -9,18 +9,25 @@ void showLogoutDialog(BuildContext context) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(243, 195, 169, 251),
+        backgroundColor: const Color.fromARGB(243, 123, 123, 123),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: const [
-            Icon(Icons.logout, color: Colors.red, size: 28),
+            Icon(
+              Icons.logout,
+              color: Color.fromARGB(255, 239, 150, 144),
+              size: 28,
+            ),
             SizedBox(width: 8),
-            Text('Confirm Logout'),
+            Text(
+              'Confirm Logout',
+              style: TextStyle(height: 1.4, color: Colors.white),
+            ),
           ],
         ),
         content: const Text(
           'Are you sure you want to log out of this account?',
-          style: TextStyle(fontSize: 16, height: 1.4),
+          style: TextStyle(fontSize: 16, height: 1.4, color: Colors.white),
         ),
         actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         actions: [
@@ -29,7 +36,7 @@ void showLogoutDialog(BuildContext context) {
             icon: const Icon(Icons.cancel, size: 18),
             label: const Text('Cancel'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 223, 167, 248),
+              backgroundColor: const Color.fromARGB(255, 155, 153, 153),
               foregroundColor: Colors.black,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -50,7 +57,7 @@ void showLogoutDialog(BuildContext context) {
             icon: const Icon(Icons.logout, size: 18),
             label: const Text('Logout'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.redAccent,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

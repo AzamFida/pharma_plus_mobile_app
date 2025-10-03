@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pharmaplus_flutter/presentation/screens/medicine_list_screen.dart';
 import 'package:pharmaplus_flutter/presentation/screens/splash_screen.dart';
 import 'package:pharmaplus_flutter/providers/auth_state_provider.dart';
@@ -13,6 +14,14 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Transparent bar
+      statusBarIconBrightness: Brightness.light, // White icons (Android)
+      statusBarBrightness: Brightness.dark, // For iOS
+    ),
+  );
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
@@ -43,9 +52,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+
+      // theme: ThemeData(
+      //   appBarTheme: const AppBarTheme(
+      //     backgroundColor: Colors.black,
+      //     systemOverlayStyle: SystemUiOverlayStyle(
+      //       statusBarColor: Colors.transparent,
+      //       statusBarIconBrightness: Brightness.light,
+      //       statusBarBrightness: Brightness.dark,
+      //     ),
+      //   ),
+      //),
       home: AuthWrapper(),
     );
   }
@@ -67,54 +84,3 @@ class AuthWrapper extends StatelessWidget {
     return authState.isLoggedIn ? MedicineListScreen() : SplashScreen();
   }
 }
-//**
-//
-//LogOUt Functionality
-// */
-
-
-
-// AppBar(
-//   title: Text('Medicine List'),
-//   actions: [
-//     PopupMenuButton(
-//       itemBuilder: (context) => [
-//         PopupMenuItem(
-//           child: Text('Logout'),
-//           onTap: () {
-//             // Delay to let menu close
-//             Future.delayed(Duration.zero, () {
-//               _showLogoutDialog(context);
-//             });
-//           },
-//         ),
-//       ],
-//     ),
-//   ],
-// );
-
-// void _showLogoutDialog(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: Text('Logout'),
-//         content: Text('Are you sure you want to logout?'),
-//         actions: [
-//           TextButton(
-//             child: Text('Cancel'),
-//             onPressed: () => Navigator.of(context).pop(),
-//           ),
-//           TextButton(
-//             child: Text('Logout'),
-//             onPressed: () async {
-//               Navigator.of(context).pop();
-//               await Provider.of<AuthStateProvider>(context, listen: false)
-//                   .logout();
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }

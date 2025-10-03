@@ -21,22 +21,24 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
+        style: const TextStyle(
+          color: Colors.white,
+        ), // 🔹 this changes typed text color
         decoration: InputDecoration(
           labelText: label,
-          floatingLabelStyle: TextStyle(color: Colors.white),
-          labelStyle: TextStyle(fontSize: 16, color: Colors.white),
+          floatingLabelStyle: const TextStyle(color: Colors.white),
+          labelStyle: const TextStyle(fontSize: 16, color: Colors.white),
           filled: true,
-
           fillColor: Colors.white24, // Light blackish background
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: const Color.fromARGB(255, 139, 138, 138),
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 220, 220, 220),
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black26, width: 2),
+            borderSide: const BorderSide(color: Colors.white, width: 2),
             borderRadius: BorderRadius.circular(8),
           ),
         ),

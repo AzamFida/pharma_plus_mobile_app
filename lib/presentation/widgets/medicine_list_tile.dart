@@ -37,7 +37,7 @@ class MedicineListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       borderOnForeground: true,
-      color: const Color.fromARGB(208, 190, 149, 247),
+      color: const Color.fromARGB(208, 109, 109, 110),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 4,
@@ -51,7 +51,7 @@ class MedicineListTile extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(122, 211, 196, 237),
+                color: const Color.fromARGB(121, 168, 168, 169),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(

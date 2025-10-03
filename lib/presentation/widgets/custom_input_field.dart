@@ -100,7 +100,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                       },
                       keyboardType: widget.keyboardType,
                       maxLines: widget.maxLines,
-                      style: TextStyle(fontSize: fontSize, color: Colors.black),
+                      style: TextStyle(fontSize: fontSize, color: Colors.white),
                       cursorHeight: fontSize + 6,
                       cursorWidth: 2,
                       decoration: InputDecoration(
@@ -110,7 +110,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                           fontSize: fontSize,
                         ),
                         filled: true,
-                        fillColor: const Color.fromARGB(255, 196, 185, 254),
+                        fillColor: const Color.fromARGB(255, 129, 129, 129),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 0,
@@ -125,7 +125,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: const BorderSide(
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 255, 254, 254),
                             width: 1,
                           ),
                         ),
@@ -143,12 +143,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                                   isObscure
                                       ? Icons.visibility_off
                                       : Icons.visibility,
-                                  color: const Color.fromARGB(
-                                    255,
-                                    104,
-                                    101,
-                                    124,
-                                  ),
+                                  color: Colors.white,
                                 ),
                                 onPressed: () {
                                   _obscureNotifier.value = !isObscure;
