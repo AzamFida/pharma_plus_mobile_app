@@ -19,6 +19,7 @@ class MedicineListScreen extends StatefulWidget {
 class _MedicineListScreenState extends State<MedicineListScreen> {
   bool _isLoading = true;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = "";
   Timer? _debounce;
 
@@ -42,6 +43,7 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
   void dispose() {
     _debounce?.cancel();
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -74,109 +76,114 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
           salePrice.contains(query);
     }).toList();
 
-    return GradientBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            'Medicines List',
-            style: TextStyle(color: Colors.white),
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        // 🧠 If the search bar is focused → unfocus instead of closing app
+        if (_searchFocusNode.hasFocus) {
+          _searchFocusNode.unfocus();
+          return false;
+        }
+        return true;
+      },
+      child: GradientBackground(
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout, color: Colors.white),
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-            ),
-          ],
-        ),
-
-        body: _isLoading
-            ? _buildShimmerList()
-            : CustomScrollView(
-                slivers: [
-                  // 🔍 Search bar
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: "Search medicines...",
-                          hintStyle: const TextStyle(color: Colors.white),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          filled: true,
-                          fillColor: const Color.fromARGB(74, 242, 237, 245),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // 📝 Medicines list or empty state
-                  if (filteredMedicines.isEmpty)
-                    const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Text(
-                          'No medicines found.',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
-                  else
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final medicine = filteredMedicines[index];
-                        return MedicineListTile(
-                          medicine: medicine,
-                          onEdit: () {
-                            Navigator.push(
-                              context,
-                              createFadeScaleRoute(
-                                AddEditMedicineScreen(medicine: medicine),
-                              ),
-                            ).then((_) {
-                              setState(() {
-                                _isLoading = true; // Show shimmer again
-                              });
-                              _loadMedicines();
-                            });
-                          },
-
-                          onDelete: () async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => _deleteDialog(context),
-                            );
-                            if (confirm == true) {
-                              provider.removeMedicine(medicine.id);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Medicine deleted'),
-                                ),
-                              );
-                            }
-                          },
-                        );
-                      }, childCount: filteredMedicines.length),
-                    ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(74, 242, 237, 245),
+                borderRadius: BorderRadius.circular(12),
               ),
-        floatingActionButton: _buildFab(context),
+              child: TextField(
+                focusNode: _searchFocusNode,
+                controller: _searchController,
+                textCapitalization: TextCapitalization.characters,
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                decoration: InputDecoration(
+                  hintText: "Search medicines...",
+                  hintStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                ),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout, color: Colors.white),
+                onPressed: () {
+                  showLogoutDialog(context);
+                },
+              ),
+            ],
+          ),
+
+          body: _isLoading
+              ? _buildShimmerList()
+              : CustomScrollView(
+                  slivers: [
+                    if (filteredMedicines.isEmpty)
+                      const SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Text(
+                            'No medicines found.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final medicine = filteredMedicines[index];
+                          return MedicineListTile(
+                            medicine: medicine,
+                            onEdit: () {
+                              Navigator.push(
+                                context,
+                                createFadeScaleRoute(
+                                  AddEditMedicineScreen(medicine: medicine),
+                                ),
+                              ).then((_) {
+                                setState(() {
+                                  _isLoading = true; // Show shimmer again
+                                });
+                                _loadMedicines();
+                              });
+                            },
+                            onDelete: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => _deleteDialog(context),
+                              );
+                              if (confirm == true) {
+                                provider.removeMedicine(medicine.id);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: Colors.redAccent,
+                                    content: Text(
+                                      'Medicine deleted',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }, childCount: filteredMedicines.length),
+                      ),
+                  ],
+                ),
+          floatingActionButton: _buildFab(context),
+        ),
       ),
     );
   }
@@ -250,7 +257,6 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
           _loadMedicines();
         });
       },
-
       child: Container(
         height: 60,
         width: 60,
@@ -273,7 +279,6 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
           baseColor: const Color.fromARGB(237, 78, 78, 79),
           highlightColor: const Color.fromARGB(121, 175, 175, 176),
           child: Card(
-            borderOnForeground: true,
             color: const Color.fromARGB(122, 211, 196, 237),
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             shape: RoundedRectangleBorder(
@@ -334,8 +339,8 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(height: 16, width: 100, color: Colors.white.withOpacity(0.5)),
-        Container(height: 16, width: 80, color: Colors.white.withOpacity(0.5)),
+        Container(height: 16, width: 100, color: Colors.white),
+        Container(height: 16, width: 80, color: Colors.white),
       ],
     );
   }

@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         controller: controller,
+        textCapitalization: TextCapitalization.characters,
         keyboardType: keyboardType,
         style: const TextStyle(
           color: Colors.white,

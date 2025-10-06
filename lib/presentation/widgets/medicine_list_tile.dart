@@ -55,7 +55,7 @@ class MedicineListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                medicine.name,
+                medicine.name.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w600,

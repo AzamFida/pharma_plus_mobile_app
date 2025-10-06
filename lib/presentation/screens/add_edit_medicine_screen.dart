@@ -115,7 +115,7 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
                 "Data is updated Successfully!",
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: Color.fromARGB(255, 191, 122, 252),
+              backgroundColor: Color.fromARGB(255, 117, 62, 164),
             ),
           );
         }

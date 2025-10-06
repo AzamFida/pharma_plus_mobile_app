@@ -24,10 +24,10 @@ class MedicineModel {
       "4": "F",
       "5": "O",
       "6": "R",
-      "7": "S",
+      "7": "C",
       "8": "A",
-      "9": "L",
-      "0": "E",
+      "9": "S",
+      "0": "H",
     };
 
     return costPrice
