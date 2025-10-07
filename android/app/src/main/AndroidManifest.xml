@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="pharmaplus_flutter"
+        android:label="Pharma Plus"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
