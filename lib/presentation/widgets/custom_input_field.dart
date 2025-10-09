@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomInputFieldWidget extends StatefulWidget {
   final String? label;
@@ -54,6 +56,9 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -61,6 +66,14 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
     final double effectiveHeight =
         widget.height ?? (widget.maxLines == 1 ? screenHeight * 0.06 : 60);
     final double fontSize = widget.hintFontSize ?? 14;
+
+    // 🎨 Theme-based colors
+    final Color textColor = isDark ? Colors.white : Colors.black87;
+    final Color hintColor = isDark ? Colors.white70 : Colors.black45;
+    final Color fillColor = isDark
+        ? const Color(0xFF555555)
+        : Colors.grey.shade200;
+    final Color borderColor = isDark ? Colors.white70 : Colors.grey.shade500;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +84,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
             style: TextStyle(
               fontSize: screenHeight * 0.02,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -100,39 +113,34 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                       },
                       keyboardType: widget.keyboardType,
                       maxLines: widget.maxLines,
-                      style: TextStyle(fontSize: fontSize, color: Colors.white),
+                      style: TextStyle(fontSize: fontSize, color: textColor),
+                      cursorColor: isDark ? Colors.white : Colors.black,
                       cursorHeight: fontSize + 6,
                       cursorWidth: 2,
                       decoration: InputDecoration(
                         hintText: widget.hintText ?? '',
                         hintStyle: TextStyle(
-                          color: Colors.white,
+                          color: hintColor,
                           fontSize: fontSize,
                         ),
                         filled: true,
-                        fillColor: const Color.fromARGB(255, 129, 129, 129),
+                        fillColor: fillColor,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 0,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Colors.white,
-                            width: 1,
-                          ),
+                          borderSide: BorderSide(color: borderColor, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 255, 254, 254),
-                            width: 1,
-                          ),
+                          borderSide: BorderSide(color: borderColor, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Colors.white,
+                          borderSide: BorderSide(
+                            color: isDark ? Colors.white : Colors.black,
                             width: 2,
                           ),
                         ),
@@ -143,7 +151,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                                   isObscure
                                       ? Icons.visibility_off
                                       : Icons.visibility,
-                                  color: Colors.white,
+                                  color: hintColor,
                                 ),
                                 onPressed: () {
                                   _obscureNotifier.value = !isObscure;
@@ -165,7 +173,7 @@ class _CustomInputFieldWidgetState extends State<CustomInputFieldWidget> {
                         child: Text(
                           _customErrorText!,
                           style: const TextStyle(
-                            color: Colors.red,
+                            color: Colors.redAccent,
                             fontSize: 12,
                           ),
                         ),

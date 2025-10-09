@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_text_field.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
-
 import 'package:pharmaplus_flutter/providers/medicine_provider.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/data/models/medicine_model.dart';
 
@@ -24,12 +24,12 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
   late TextEditingController _wholeSalePriceController;
   late TextEditingController _salePriceController;
 
+  bool _isLoading = false; // ✅ Added for progress indicator
+
   String formatNumber(double value) {
     if (value == value.roundToDouble()) {
-      // If whole number, show without decimal
       return value.toInt().toString();
     } else {
-      // Else show with decimal
       return value.toString();
     }
   }
@@ -57,10 +57,8 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
 
   num parseNumber(String value) {
     if (value.contains('.')) {
-      // decimal number
       return double.parse(value);
     } else {
-      // integer number
       return int.parse(value);
     }
   }
@@ -74,14 +72,12 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
     super.dispose();
   }
 
-  // In _saveMedicine method, remove the ID generation:
-  // In _saveMedicine method, remove the ID generation:
-  void _saveMedicine() {
+  Future<void> _saveMedicine() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true); // ✅ Start loading
       try {
-        // Create medicine without ID - it will be auto-generated
         final medicine = MedicineModel(
-          id: 0, // Temporary value, will be replaced by auto-increment
+          id: 0,
           name: _nameController.text,
           costPrice: parseNumber(_costPriceController.text).toDouble(),
           wholeSalePrice: parseNumber(
@@ -93,41 +89,44 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
         final medicineProvider = context.read<MedicineProvider>();
 
         if (widget.medicine == null) {
-          // Add new medicine (auto-increment will handle ID)
-          medicineProvider.addMedicine(medicine);
+          await medicineProvider.addMedicine(medicine);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                "Data is Added",
+                "Data Added Successfully",
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: Color.fromARGB(255, 191, 122, 252),
+              backgroundColor: Colors.blue,
             ),
           );
         } else {
-          // Editing existing medicine - keep the original ID
-          medicineProvider.updateMedicine(
+          await medicineProvider.updateMedicine(
             medicine.copyWith(id: widget.medicine!.id),
           );
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                "Data is updated Successfully!",
+                "Data Updated Successfully",
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: Color.fromARGB(255, 117, 62, 164),
+              backgroundColor: Colors.blue,
             ),
           );
         }
 
-        Navigator.pop(context);
+        if (mounted) Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please Enter valid numbers.'),
+            content: Text(
+              'Please enter valid numbers.',
+              style: TextStyle(color: Colors.white),
+            ),
             backgroundColor: Colors.red,
           ),
         );
+      } finally {
+        if (mounted) setState(() => _isLoading = false); // ✅ Stop loading
       }
     }
   }
@@ -135,18 +134,24 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.medicine != null;
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     return GradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          backgroundColor: theme
+              ? const Color.fromARGB(39, 94, 93, 93)
+              : Colors.blue,
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             isEditing ? 'Edit Medicine' : 'Add Medicine',
             style: TextStyle(color: Colors.white),
           ),
-          animateColor: true,
-          backgroundColor: Colors.transparent,
+
+          elevation: 0,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -155,7 +160,7 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 60),
+                  const SizedBox(height: 60),
                   CustomTextFormField(
                     controller: _nameController,
                     label: "Name",
@@ -175,12 +180,15 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
                     label: "Sale Price",
                     keyboardType: TextInputType.number,
                   ),
-
                   const SizedBox(height: 20),
-                  CustomButton(
-                    onPressed: _saveMedicine,
-                    text: isEditing ? 'Update' : 'Save',
-                  ),
+
+                  // ✅ Show loader while saving
+                  _isLoading
+                      ? const CircularProgressIndicator()
+                      : CustomButton(
+                          onPressed: _saveMedicine,
+                          text: isEditing ? 'Update' : 'Save',
+                        ),
                 ],
               ),
             ),

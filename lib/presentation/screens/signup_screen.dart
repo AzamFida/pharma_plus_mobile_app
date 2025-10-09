@@ -6,6 +6,7 @@ import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart
 import 'package:pharmaplus_flutter/providers/login_providers.dart';
 import 'package:pharmaplus_flutter/providers/signup_provider.dart';
 import 'package:pharmaplus_flutter/providers/email_authenticafion_provider.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -22,10 +23,10 @@ class SignupScreen extends StatelessWidget {
     // Access providers directly (provided by MultiProvider in main.dart)
     final signupProvider = Provider.of<SignupProvider>(context);
     final authProvider = Provider.of<EmailAuthenticationProvider>(context);
+    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
 
     return GradientBackground(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         body: SizedBox(
           height: height,
           width: width,
@@ -42,7 +43,7 @@ class SignupScreen extends StatelessWidget {
                     Text(
                       "Create Account",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: theme ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: width * 0.08,
                       ),
@@ -50,7 +51,7 @@ class SignupScreen extends StatelessWidget {
                     Text(
                       "to get started now!",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: theme ? Colors.white : Colors.black,
                         fontWeight: FontWeight.w400,
                         fontSize: width * 0.06,
                       ),
@@ -110,7 +111,9 @@ class SignupScreen extends StatelessWidget {
 
                     // Signup Button
                     authProvider.isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? CircularProgressIndicator(
+                            color: theme ? Colors.white : Colors.black,
+                          )
                         : MaterialButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
@@ -142,11 +145,13 @@ class SignupScreen extends StatelessWidget {
                                 }
                               }
                             },
-                            color: const Color.fromARGB(188, 189, 138, 244),
+                            color: Colors.blue,
                             minWidth: width * 0.9,
                             height: height * 0.06,
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.white),
+                              side: BorderSide(
+                                color: theme ? Colors.black : Colors.white,
+                              ),
                               borderRadius: BorderRadius.circular(
                                 height * 0.01,
                               ),
@@ -169,7 +174,7 @@ class SignupScreen extends StatelessWidget {
                         Text(
                           "Already have an account? ",
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 170, 113, 196),
+                            color: Colors.blue,
                             fontSize: width * 0.042,
                           ),
                         ),
@@ -179,7 +184,7 @@ class SignupScreen extends StatelessWidget {
                               context,
                               createFadeScaleRoute(const LoginScreen()),
                             );
-                            Provider.of<LoginProvider>(
+                            Provider.of<SignupProvider>(
                               context,
                               listen: false,
                             ).clearFields();
@@ -187,11 +192,15 @@ class SignupScreen extends StatelessWidget {
                           child: Text(
                             "Login Now",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: theme
+                                  ? Colors.white
+                                  : const Color.fromARGB(255, 89, 89, 89),
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                               fontSize: width * 0.04,
-                              decorationColor: Colors.white,
+                              decorationColor: theme
+                                  ? Colors.white
+                                  : const Color.fromARGB(255, 88, 88, 88),
                               decorationThickness: 2,
                             ),
                           ),

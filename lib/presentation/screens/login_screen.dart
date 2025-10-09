@@ -3,6 +3,7 @@ import 'package:pharmaplus_flutter/presentation/screens/medicine_list_screen.dar
 import 'package:pharmaplus_flutter/presentation/screens/signup_screen.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/animation_widget.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_input_field.dart';
 import 'package:pharmaplus_flutter/providers/login_providers.dart';
@@ -29,10 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
     // Access existing providers from main.dart
     final loginProvider = Provider.of<LoginProvider>(context);
     final authProvider = Provider.of<EmailAuthenticationProvider>(context);
+    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
 
     return GradientBackground(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         body: SizedBox(
           width: width,
           height: height,
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     "Welcome,",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: theme ? Colors.white : Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: width * 0.08,
                     ),
@@ -55,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     "Glad to see you!",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: theme ? Colors.white : Colors.black,
                       fontWeight: FontWeight.w400,
                       fontSize: width * 0.07,
                     ),
@@ -113,7 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // 🔘 Login Button
                   authProvider.isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? CircularProgressIndicator(
+                          color: theme ? Colors.white : Colors.black,
+                        )
                       : MaterialButton(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
@@ -145,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             }
                           },
-                          color: const Color.fromARGB(188, 189, 138, 244),
+                          color: Colors.blue,
                           minWidth: width * 0.9,
                           height: height * 0.06,
 
@@ -157,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             "Login",
                             style: TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                               fontSize: width * 0.05,
                             ),
                           ),
@@ -170,19 +174,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         height: height * 0.002,
                         width: width * 0.2,
-                        color: Colors.white,
+                        color: theme ? Colors.white : Colors.black,
                       ),
                       Text(
                         "  Or Login with  ",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: theme ? Colors.white : Colors.black,
                           fontSize: width * 0.04,
                         ),
                       ),
                       Container(
                         height: height * 0.002,
                         width: width * 0.2,
-                        color: Colors.white,
+                        color: theme ? Colors.white : Colors.black,
                       ),
                     ],
                   ),
@@ -217,12 +221,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     },
                     child: Container(
-                      height: height * 0.065,
+                      height: height * 0.06,
                       width: width * 0.9,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 211, 189, 255),
+                        color: Colors.lightBlue,
                         borderRadius: BorderRadius.circular(height * 0.01),
-                        border: Border.all(color: Colors.white, width: 1),
+                        border: Border.all(
+                          color: theme ? Colors.white : Colors.black,
+                          width: 1,
+                        ),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -254,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         "Don't have an account? ",
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 170, 113, 196),
+                          color: Colors.blue,
                           fontSize: width * 0.04,
                         ),
                       ),
@@ -272,11 +279,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           "Sign Up Now",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: theme
+                                ? Colors.white
+                                : const Color.fromARGB(255, 77, 76, 76),
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                             fontSize: width * 0.04,
-                            decorationColor: Colors.white,
+                            decorationColor: theme
+                                ? Colors.white
+                                : const Color.fromARGB(255, 80, 79, 79),
                             decorationThickness: 2,
                           ),
                         ),

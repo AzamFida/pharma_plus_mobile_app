@@ -19,6 +19,7 @@ dependencies:
   firebase_auth: ^6.0.2
   cloud_firestore: ^6.0.1
   shared_preferences: ^2.5.3
+  animate_do: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -35,4 +36,4 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/app_icon.png"
+  image_path: "assets/icons/app_icon.jpg"

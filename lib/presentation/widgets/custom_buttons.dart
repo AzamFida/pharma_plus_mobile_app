@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.text = 'Save',
 
-    this.backgroundColor = const Color.fromARGB(150, 153, 108, 249),
+    this.backgroundColor = Colors.blue,
     this.textColor = Colors.white,
   });
 

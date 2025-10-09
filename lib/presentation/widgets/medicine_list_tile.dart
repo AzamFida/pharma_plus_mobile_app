@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pharmaplus_flutter/data/models/medicine_model.dart';
+import 'package:provider/provider.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
 
 class MedicineListTile extends StatelessWidget {
   final MedicineModel medicine;
@@ -15,7 +17,6 @@ class MedicineListTile extends StatelessWidget {
   });
 
   String formatPrice(double price) {
-    // Check if price has no decimal
     if (price == price.roundToDouble()) {
       final formatCurrency = NumberFormat.currency(
         locale: 'en_PK',
@@ -35,12 +36,23 @@ class MedicineListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+    final theme = Theme.of(context);
+
     return Card(
-      borderOnForeground: true,
-      color: const Color.fromARGB(208, 109, 109, 110),
+      color: isDark
+          ? const Color.fromARGB(33, 77, 77, 77)
+          : const Color.fromARGB(
+              255,
+              255,
+              255,
+              255,
+            ), // Background depends on theme
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 12,
+      shadowColor: isDark ? Colors.black54 : Colors.grey.withOpacity(0.3),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -51,77 +63,63 @@ class MedicineListTile extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(121, 168, 168, 169),
+                color: isDark
+                    ? const Color.fromARGB(66, 179, 179, 179)
+                    : const Color.fromARGB(255, 241, 240, 240),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
                 medicine.name.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 22,
+                style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: isDark
+                      ? Colors.white
+                      : const Color.fromARGB(255, 36, 35, 35),
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 10),
 
-            // 🔑 Secret Code
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Secret Code:', style: _labelStyle),
-                Text(medicine.secretCode, style: _valueStyle), // ✅ NEW
-              ],
-            ),
+            // Secret Code
+            _buildRow('Secret Code:', medicine.secretCode, isDark),
             const SizedBox(height: 4),
 
             // Prices
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Cost Price:', style: _labelStyle),
-                Text(formatPrice(medicine.costPrice), style: _valueStyle),
-              ],
+            _buildRow('Cost Price:', formatPrice(medicine.costPrice), isDark),
+            const SizedBox(height: 4),
+            _buildRow(
+              'Wholesale Price:',
+              formatPrice(medicine.wholeSalePrice),
+              isDark,
             ),
             const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Wholesale Price:', style: _labelStyle),
-                Text(formatPrice(medicine.wholeSalePrice), style: _valueStyle),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Sale Price:', style: _labelStyle),
-                Text(formatPrice(medicine.salePrice), style: _valueStyle),
-              ],
-            ),
+            _buildRow('Sale Price:', formatPrice(medicine.salePrice), isDark),
 
             const SizedBox(height: 12),
 
-            // Action buttons
+            // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Edit Button
                 ElevatedButton.icon(
                   onPressed: onEdit,
-                  icon: const Icon(Icons.edit, size: 18),
-                  label: const Text('Edit'),
+                  icon: Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: isDark ? Colors.white : Colors.white,
+                  ),
+                  label: const Text(
+                    'Edit',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(135, 163, 81, 235),
+                    backgroundColor: theme.colorScheme.primary,
                     fixedSize: const Size(110, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
                     ),
                     textStyle: const TextStyle(fontSize: 14),
                   ),
@@ -131,18 +129,16 @@ class MedicineListTile extends StatelessWidget {
                 // Delete Button
                 ElevatedButton.icon(
                   onPressed: onDelete,
-                  icon: const Icon(Icons.delete, size: 18),
-                  label: const Text('Delete'),
+                  icon: const Icon(Icons.delete, size: 18, color: Colors.white),
+                  label: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(110, 40),
-                    foregroundColor: Colors.white,
                     backgroundColor: Colors.redAccent,
+                    fixedSize: const Size(110, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
                     ),
                     textStyle: const TextStyle(fontSize: 14),
                   ),
@@ -155,15 +151,27 @@ class MedicineListTile extends StatelessWidget {
     );
   }
 
-  TextStyle get _labelStyle => const TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: Colors.white,
-  );
-
-  TextStyle get _valueStyle => const TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: Colors.white,
-  );
+  Widget _buildRow(String label, String value, bool isDark) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isDark ? Colors.grey[300] : Colors.black87,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
 }
