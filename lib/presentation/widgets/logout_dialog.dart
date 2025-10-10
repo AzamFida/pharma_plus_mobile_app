@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/screens/login_screen.dart';
@@ -14,78 +15,87 @@ void showLogoutDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
-        backgroundColor: isDark
-            ? const Color.fromARGB(255, 71, 71, 71)
-            : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 12,
-        ),
-        actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+      return BounceInDown(
+        duration: const Duration(milliseconds: 500),
+        delay: Duration(milliseconds: 300),
+        child: AlertDialog(
+          backgroundColor: isDark
+              ? const Color.fromARGB(255, 71, 71, 71)
+              : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 24,
+          ),
+          titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 12,
+          ),
+          actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
 
-        // 🧠 Title Section
-        title: Row(
-          children: [
-            Icon(
-              Icons.logout_rounded,
-              color: Colors.redAccent.shade200,
-              size: width * 0.07,
-            ),
-            SizedBox(width: width * 0.025),
-            Expanded(
-              child: Text(
-                'Confirm Logout',
-                style: TextStyle(
-                  fontSize: width * 0.045,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black,
+          // 🧠 Title Section
+          title: Row(
+            children: [
+              Icon(
+                Icons.logout_rounded,
+                color: Colors.redAccent.shade200,
+                size: width * 0.07,
+              ),
+              SizedBox(width: width * 0.025),
+              Expanded(
+                child: Text(
+                  'Confirm Logout',
+                  style: TextStyle(
+                    fontSize: width * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
+            ],
+          ),
+
+          // 📜 Content Section
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: width * 0.8,
+              maxHeight: height * 0.25,
             ),
+            child: Text(
+              'Are you sure you want to log out of this account?',
+              style: TextStyle(
+                fontSize: width * 0.04,
+                height: 1.4,
+                color: isDark ? Colors.grey[200] : Colors.black87,
+              ),
+            ),
+          ),
+
+          // 🎯 Action Buttons
+          actions: [
+            if (isSmall)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _cancelButton(context, isDark),
+                  const SizedBox(height: 10),
+                  _logoutButton(context),
+                ],
+              )
+            else
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(child: _cancelButton(context, isDark)),
+                  const SizedBox(width: 16),
+                  Expanded(child: _logoutButton(context)),
+                ],
+              ),
           ],
         ),
-
-        // 📜 Content Section
-        content: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: width * 0.8,
-            maxHeight: height * 0.25,
-          ),
-          child: Text(
-            'Are you sure you want to log out of this account?',
-            style: TextStyle(
-              fontSize: width * 0.04,
-              height: 1.4,
-              color: isDark ? Colors.grey[200] : Colors.black87,
-            ),
-          ),
-        ),
-
-        // 🎯 Action Buttons
-        actions: [
-          if (isSmall)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _cancelButton(context, isDark),
-                const SizedBox(height: 10),
-                _logoutButton(context),
-              ],
-            )
-          else
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(child: _cancelButton(context, isDark)),
-                const SizedBox(width: 16),
-                Expanded(child: _logoutButton(context)),
-              ],
-            ),
-        ],
       );
     },
   );

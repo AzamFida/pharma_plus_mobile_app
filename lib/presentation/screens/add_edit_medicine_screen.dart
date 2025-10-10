@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_text_field.dart';
@@ -24,7 +25,7 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
   late TextEditingController _wholeSalePriceController;
   late TextEditingController _salePriceController;
 
-  bool _isLoading = false; // ✅ Added for progress indicator
+  bool _isLoading = false;
 
   String formatNumber(double value) {
     if (value == value.roundToDouble()) {
@@ -74,7 +75,7 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
 
   Future<void> _saveMedicine() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true); // ✅ Start loading
+      setState(() => _isLoading = true);
       try {
         final medicine = MedicineModel(
           id: 0,
@@ -126,7 +127,7 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
           ),
         );
       } finally {
-        if (mounted) setState(() => _isLoading = false); // ✅ Stop loading
+        if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -134,23 +135,21 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.medicine != null;
-    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-    final theme = Provider.of<ThemeProvider>(context).isDarkMode;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
 
     return GradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: theme
+          backgroundColor: isDarkMode
               ? const Color.fromARGB(39, 94, 93, 93)
               : Colors.blue,
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
             isEditing ? 'Edit Medicine' : 'Add Medicine',
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
-
           elevation: 0,
         ),
         body: Padding(
@@ -160,35 +159,62 @@ class _AddEditMedicineScreenState extends State<AddEditMedicineScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 60),
-                  CustomTextFormField(
-                    controller: _nameController,
-                    label: "Name",
-                  ),
-                  CustomTextFormField(
-                    controller: _costPriceController,
-                    label: "Cost Price",
-                    keyboardType: TextInputType.number,
-                  ),
-                  CustomTextFormField(
-                    controller: _wholeSalePriceController,
-                    label: "Wholesale Price",
-                    keyboardType: TextInputType.number,
-                  ),
-                  CustomTextFormField(
-                    controller: _salePriceController,
-                    label: "Sale Price",
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
 
-                  // ✅ Show loader while saving
-                  _isLoading
-                      ? const CircularProgressIndicator()
-                      : CustomButton(
-                          onPressed: _saveMedicine,
-                          text: isEditing ? 'Update' : 'Save',
-                        ),
+                  /// 👇 Fade + Slide animations for fields
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    child: CustomTextFormField(
+                      controller: _nameController,
+                      label: "Name",
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 150),
+                    child: CustomTextFormField(
+                      controller: _costPriceController,
+                      label: "Cost Price",
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 300),
+                    child: CustomTextFormField(
+                      controller: _wholeSalePriceController,
+                      label: "Wholesale Price",
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 500),
+                    delay: const Duration(milliseconds: 450),
+                    child: CustomTextFormField(
+                      controller: _salePriceController,
+                      label: "Sale Price",
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  /// Button animation
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 600),
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : CustomButton(
+                            onPressed: _saveMedicine,
+                            text: isEditing ? 'Update' : 'Save',
+                          ),
+                  ),
                 ],
               ),
             ),

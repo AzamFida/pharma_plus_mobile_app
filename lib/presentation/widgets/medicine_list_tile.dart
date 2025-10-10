@@ -116,7 +116,7 @@ class MedicineListTile extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
+                    backgroundColor: Colors.blue,
                     fixedSize: const Size(110, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

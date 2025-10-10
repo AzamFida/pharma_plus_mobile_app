@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/screens/medicine_list_screen.dart';
 import 'package:pharmaplus_flutter/presentation/screens/signup_screen.dart';
-import 'package:pharmaplus_flutter/presentation/widgets/animation_widget.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
-import 'package:pharmaplus_flutter/providers/theme_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/custom_input_field.dart';
+import 'package:pharmaplus_flutter/presentation/widgets/custom_buttons.dart';
+import 'package:pharmaplus_flutter/providers/theme_provider.dart';
 import 'package:pharmaplus_flutter/providers/login_providers.dart';
 import 'package:pharmaplus_flutter/providers/google_signin_provider.dart';
 import 'package:pharmaplus_flutter/providers/email_authenticafion_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:animate_do/animate_do.dart'; // ✅ animate_do package
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,43 +28,52 @@ class _LoginScreenState extends State<LoginScreen> {
     final height = size.height;
     final width = size.width;
 
-    // Access existing providers from main.dart
     final loginProvider = Provider.of<LoginProvider>(context);
     final authProvider = Provider.of<EmailAuthenticationProvider>(context);
     final theme = Provider.of<ThemeProvider>(context).isDarkMode;
 
     return GradientBackground(
       child: Scaffold(
-        body: SizedBox(
-          width: width,
-          height: height,
+        backgroundColor: Colors.transparent,
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.08),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                SizedBox(height: height * 0.12),
 
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  SizedBox(height: height * 0.12),
-                  Text(
-                    "Welcome,",
-                    style: TextStyle(
-                      color: theme ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: width * 0.08,
-                    ),
+                /// ✨ Animated Header
+                FadeInDown(
+                  duration: const Duration(milliseconds: 1000),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Welcome,",
+                        style: TextStyle(
+                          color: theme ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: width * 0.08,
+                        ),
+                      ),
+                      Text(
+                        "Glad to see you!",
+                        style: TextStyle(
+                          color: theme ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: width * 0.07,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Glad to see you!",
-                    style: TextStyle(
-                      color: theme ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: width * 0.07,
-                    ),
-                  ),
-                  SizedBox(height: height * 0.06),
-                  if (_errorMessage != null)
-                    Padding(
+                ),
+
+                SizedBox(height: height * 0.06),
+
+                /// ⚠️ Error message with bounce
+                if (_errorMessage != null)
+                  BounceInDown(
+                    child: Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: Text(
                         _errorMessage!,
@@ -74,10 +84,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                  SizedBox(height: height * 0.06),
+                  ),
 
-                  // ✉️ Email Field
-                  CustomInputFieldWidget(
+                SizedBox(height: height * 0.03),
+
+                /// 📧 Email Field Animation
+                FadeInUp(
+                  delay: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 800),
+                  child: CustomInputFieldWidget(
                     hintText: "Email Address",
                     controller: loginProvider.emailController,
                     validator: (value) {
@@ -93,10 +108,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: height * 0.015),
+                ),
 
-                  // 🔑 Password Field
-                  CustomInputFieldWidget(
+                SizedBox(height: height * 0.02),
+
+                /// 🔑 Password Field Animation
+                FadeInUp(
+                  delay: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 800),
+                  child: CustomInputFieldWidget(
                     hintText: "Password",
                     controller: loginProvider.passwordController,
                     obscureText: true,
@@ -110,10 +130,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: height * 0.07),
+                ),
 
-                  // 🔘 Login Button
-                  authProvider.isLoading
+                SizedBox(height: height * 0.07),
+
+                /// 🔘 Login Button Animation
+                ZoomIn(
+                  delay: const Duration(milliseconds: 700),
+                  duration: const Duration(milliseconds: 600),
+                  child: authProvider.isLoading
                       ? CircularProgressIndicator(
                           color: theme ? Colors.white : Colors.black,
                         )
@@ -131,10 +156,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   context,
                                   listen: false,
                                 ).clearFields();
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => MedicineListScreen(),
+                                    builder: (_) => const MedicineListScreen(),
                                   ),
                                 );
                               } else if (authProvider.errorMessage != null) {
@@ -151,9 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.blue,
                           minWidth: width * 0.9,
                           height: height * 0.06,
-
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.white),
+                            side: const BorderSide(color: Colors.white),
                             borderRadius: BorderRadius.circular(height * 0.01),
                           ),
                           child: Text(
@@ -165,10 +190,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                  SizedBox(height: height * 0.06),
+                ),
 
-                  // Divider
-                  Row(
+                SizedBox(height: height * 0.06),
+
+                /// Divider Animation
+                FadeIn(
+                  delay: const Duration(milliseconds: 800),
+                  duration: const Duration(milliseconds: 600),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
@@ -190,10 +220,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: height * 0.05),
+                ),
 
-                  // 🌐 Google Login
-                  GestureDetector(
+                SizedBox(height: height * 0.05),
+
+                /// 🌐 Google Login Animation
+                SlideInUp(
+                  delay: const Duration(milliseconds: 1000),
+                  duration: const Duration(milliseconds: 800),
+                  child: GestureDetector(
                     onTap: () async {
                       final googleProvider = context
                           .read<GoogleSignInProvider>();
@@ -215,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    MedicineListScreen(),
+                                    const MedicineListScreen(),
                           ),
                         );
                       }
@@ -251,11 +286,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
+                ),
 
-                  SizedBox(height: height * 0.08),
+                SizedBox(height: height * 0.08),
 
-                  // 🧾 Sign-up Redirect
-                  Row(
+                /// 🧾 Sign-up Redirect Animation
+                FadeInUp(
+                  delay: const Duration(milliseconds: 1200),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -269,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            createFadeScaleRoute(SignupScreen()),
+                            MaterialPageRoute(builder: (_) => SignupScreen()),
                           );
                           Provider.of<LoginProvider>(
                             context,
@@ -294,9 +332,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: height * 0.05),
-                ],
-              ),
+                ),
+                SizedBox(height: height * 0.05),
+              ],
             ),
           ),
         ),

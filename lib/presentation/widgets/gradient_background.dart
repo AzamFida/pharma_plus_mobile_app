@@ -12,8 +12,7 @@ class GradientBackground extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.isDarkMode;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
+    return Container(
       decoration: BoxDecoration(
         gradient: isDark
             ? const LinearGradient(

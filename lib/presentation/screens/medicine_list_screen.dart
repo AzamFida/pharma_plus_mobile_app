@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/animation_widget.dart';
 import 'package:pharmaplus_flutter/presentation/widgets/gradient_background.dart';
@@ -27,6 +28,7 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
   @override
   void initState() {
     super.initState();
+    _searchFocusNode.unfocus();
     _loadMedicines();
 
     // 🔍 Debounced search listener
@@ -42,6 +44,7 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
 
   @override
   void dispose() {
+    _searchFocusNode.unfocus();
     _debounce?.cancel();
     _searchController.dispose();
     _searchFocusNode.dispose();
@@ -87,144 +90,164 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
         }
         return true;
       },
-      child: GradientBackground(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: theme
-                ? const Color.fromARGB(39, 68, 68, 68)
-                : Colors.blue,
+      child: AnimatedTheme(
+        data: theme ? ThemeData.dark() : ThemeData.light(),
+        duration: const Duration(milliseconds: 300),
+        child: GradientBackground(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: theme
+                  ? const Color.fromARGB(39, 68, 68, 68)
+                  : Colors.blue,
 
-            title: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Provider.of<ThemeProvider>(context).isDarkMode
-                    ? const Color.fromARGB(74, 242, 237, 245)
-                    : const Color.fromARGB(
-                        80,
-                        205,
-                        203,
-                        203,
-                      ), // light mode background
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TextField(
-                focusNode: _searchFocusNode,
-                controller: _searchController,
-                textCapitalization: TextCapitalization.characters,
-                style: TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  hintText: "Search medicines...",
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: Icon(Icons.search, color: Colors.white),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(Icons.cancel, color: Colors.white),
-                          onPressed: () {
-                            _searchController.clear();
-                          },
-                        )
-                      : null,
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              title: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Provider.of<ThemeProvider>(context).isDarkMode
+                      ? const Color.fromARGB(74, 242, 237, 245)
+                      : const Color.fromARGB(
+                          80,
+                          205,
+                          203,
+                          203,
+                        ), // light mode background
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                onChanged: (value) {
-                  (_searchController as TextEditingController)
-                      .notifyListeners();
-                },
+                child: TextField(
+                  autofocus: false,
+                  focusNode: _searchFocusNode,
+                  controller: _searchController,
+                  textCapitalization: TextCapitalization.characters,
+                  style: TextStyle(color: Colors.white),
+                  cursorColor: Colors.white,
+                  decoration: InputDecoration(
+                    hintText: "Search medicines...",
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.search, color: Colors.white),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            onPressed: () {
+                              _searchController.clear();
+                            },
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  onChanged: (value) {
+                    (_searchController).notifyListeners();
+                  },
+                ),
               ),
+              actions: [
+                FadeInUp(
+                  duration: const Duration(milliseconds: 1500),
+                  delay: Duration(milliseconds: 1300),
+                  child: IconButton(
+                    icon: Icon(
+                      Provider.of<ThemeProvider>(context).isDarkMode
+                          ? Icons.dark_mode
+                          : Icons.light_mode,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      final themeProvider = Provider.of<ThemeProvider>(
+                        context,
+                        listen: false,
+                      );
+                      themeProvider.toggleTheme(!themeProvider.isDarkMode);
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.logout, color: Colors.white),
+                  onPressed: () {
+                    showLogoutDialog(context);
+                  },
+                ),
+              ],
             ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Provider.of<ThemeProvider>(context).isDarkMode
-                      ? Icons.dark_mode
-                      : Icons.light_mode,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  final themeProvider = Provider.of<ThemeProvider>(
-                    context,
-                    listen: false,
-                  );
-                  themeProvider.toggleTheme(!themeProvider.isDarkMode);
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.logout, color: Colors.white),
-                onPressed: () {
-                  showLogoutDialog(context);
-                },
-              ),
-            ],
-          ),
 
-          body: _isLoading
-              ? _buildShimmerList()
-              : CustomScrollView(
-                  slivers: [
-                    if (filteredMedicines.isEmpty)
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Center(
-                          child: Text(
-                            'No medicines found.',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color:
-                                  Provider.of<ThemeProvider>(context).isDarkMode
-                                  ? Colors.white
-                                  : Colors.black,
+            body: _isLoading
+                ? _buildShimmerList()
+                : CustomScrollView(
+                    slivers: [
+                      if (filteredMedicines.isEmpty)
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Center(
+                            child: Text(
+                              'No medicines found.',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color:
+                                    Provider.of<ThemeProvider>(
+                                      context,
+                                    ).isDarkMode
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    else
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final medicine = filteredMedicines[index];
-                          return MedicineListTile(
-                            medicine: medicine,
-                            onEdit: () {
-                              Navigator.push(
-                                context,
-                                createFadeScaleRoute(
-                                  AddEditMedicineScreen(medicine: medicine),
-                                ),
-                              ).then((_) {
-                                setState(() {
-                                  _isLoading = true; // Show shimmer again
-                                });
-                                _loadMedicines();
-                              });
-                            },
-                            onDelete: () async {
-                              final confirm = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => _deleteDialog(context),
-                              );
-                              if (confirm == true) {
-                                provider.removeMedicine(medicine.id);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.redAccent,
-                                    content: Text(
-                                      'Medicine deleted',
-                                      style: TextStyle(color: Colors.white),
+                        )
+                      else
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final medicine = filteredMedicines[index];
+
+                            // All items slide in from left, one after another
+                            return FadeInDown(
+                              duration: const Duration(milliseconds: 1000),
+                              delay: Duration(
+                                milliseconds: index * 80,
+                              ), // 👈 small stagger delay
+                              child: MedicineListTile(
+                                medicine: medicine,
+                                onEdit: () {
+                                  Navigator.push(
+                                    context,
+                                    createFadeScaleRoute(
+                                      AddEditMedicineScreen(medicine: medicine),
                                     ),
-                                  ),
-                                );
-                              }
-                            },
-                          );
-                        }, childCount: filteredMedicines.length),
-                      ),
-                  ],
-                ),
-          floatingActionButton: _buildFab(context),
+                                  ).then((_) {
+                                    setState(() => _isLoading = true);
+                                    _loadMedicines();
+                                  });
+                                },
+                                onDelete: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) =>
+                                        _deleteDialog(context),
+                                  );
+                                  if (confirm == true) {
+                                    provider.removeMedicine(medicine.id);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        backgroundColor: Colors.redAccent,
+                                        content: Text(
+                                          'Medicine deleted',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          }, childCount: filteredMedicines.length),
+                        ),
+                    ],
+                  ),
+            floatingActionButton: _buildFab(context),
+          ),
         ),
       ),
     );
@@ -238,72 +261,79 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
 
     final isSmall = width < 380;
 
-    return AlertDialog(
-      backgroundColor: isDark
-          ? const Color.fromARGB(255, 71, 71, 71)
-          : Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-      actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+    return BounceInDown(
+      duration: const Duration(milliseconds: 500),
+      delay: Duration(milliseconds: 300),
+      child: AlertDialog(
+        backgroundColor: isDark
+            ? const Color.fromARGB(255, 71, 71, 71)
+            : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 12,
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
 
-      title: Row(
-        children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: Colors.redAccent.shade200,
-            size: width * 0.07,
-          ),
-          SizedBox(width: width * 0.025),
-          Expanded(
-            child: Text(
-              'Confirm Deletion',
-              style: TextStyle(
-                fontSize: width * 0.045,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : Colors.black,
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.redAccent.shade200,
+              size: width * 0.07,
+            ),
+            SizedBox(width: width * 0.025),
+            Expanded(
+              child: Text(
+                'Confirm Deletion',
+                style: TextStyle(
+                  fontSize: width * 0.045,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
               ),
             ),
+          ],
+        ),
+
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: width * 0.8,
+            maxHeight: height * 0.25,
           ),
+          child: Text(
+            'This action will permanently remove this medicine.\nAre you sure you want to proceed?',
+            style: TextStyle(
+              fontSize: width * 0.04,
+              height: 1.4,
+              color: isDark ? Colors.grey[200] : Colors.black87,
+            ),
+          ),
+        ),
+
+        actions: [
+          if (isSmall)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _cancelButton(context, isDark),
+                const SizedBox(height: 10),
+                _deleteButton(context),
+              ],
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(child: _cancelButton(context, isDark)),
+                const SizedBox(width: 16),
+                Expanded(child: _deleteButton(context)),
+              ],
+            ),
         ],
       ),
-
-      content: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: width * 0.8,
-          maxHeight: height * 0.25,
-        ),
-        child: Text(
-          'This action will permanently remove this medicine.\nAre you sure you want to proceed?',
-          style: TextStyle(
-            fontSize: width * 0.04,
-            height: 1.4,
-            color: isDark ? Colors.grey[200] : Colors.black87,
-          ),
-        ),
-      ),
-
-      actions: [
-        if (isSmall)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _cancelButton(context, isDark),
-              const SizedBox(height: 10),
-              _deleteButton(context),
-            ],
-          )
-        else
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(child: _cancelButton(context, isDark)),
-              const SizedBox(width: 16),
-              Expanded(child: _deleteButton(context)),
-            ],
-          ),
-      ],
     );
   }
 
@@ -370,6 +400,8 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
+          loop: 2,
+
           baseColor: Provider.of<ThemeProvider>(context).isDarkMode
               ? const Color.fromARGB(237, 78, 78, 79)
               : const Color.fromARGB(121, 175, 175, 176),
@@ -416,7 +448,7 @@ class _MedicineListScreenState extends State<MedicineListScreen> {
                         height: 40,
                         width: 110,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(242, 192, 134, 243),
+                          color: Colors.blue,
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
